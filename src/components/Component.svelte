@@ -8,21 +8,31 @@
     }
 
     let component;
+    let content;
+    let slider
 
     onMount(() => {
     const ctx = gsap.context((self) => {
-        gsap.to(self.selector(".slider"), {
+        gsap.to(slider, {
             scrollTrigger: {
-                trigger: self.selector(".slider"),
-                start: "bottom 75%",
-                end: "top 25%",
+                trigger: component,
+                start: "top top",
+                end:  "bottom+=200px 75%",
                 scrub: 1,
-                markers: true,
+                pin: component,
+                invalidateOnRefresh: true,
             },
-            right: 0,
+            x: () => 0 - (slider.offsetWidth - window.innerWidth),
             duration: 5
         });
+
+            console.log("x: ",0 - (slider.offsetWidth - window.innerWidth));
+            console.log('slider offset width: ', slider.offsetWidth);
+            console.log('window inner width: ',window.innerWidth);
+
+
     }, component); // <- Scope!
+
 
     return () => ctx.revert(); // <- Cleanup!
   });
@@ -31,71 +41,94 @@
 </script>
 
 <div class="component bg-color" bind:this={component}>
-    <section>
-        <p class="button">CTA Button Name</p>
-        <h1>At massa feugiat mauris diam</h1>
-        <h2>Gmassa nisl malesuada lacinia integer nunc posuere ut hendrerit</h2>
-    </section>
+    <div class="component-content" bind:this={content}>
+        <section>
+            <p class="button">CTA Button Name</p>
+            <h1>At massa feugiat mauris diam</h1>
+            <h2>Gmassa nisl malesuada lacinia integer nunc posuere ut hendrerit</h2>
+        </section>
 
-    <div class="carousel-container">
-        <div class="slider">
-            <div class="slider-margin"></div>
-        
-            <div class="card">
-                <p class="number">01</p>
-                <div class="card-details">
-                    <h3>Neque risus maecenas</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        <div class="carousel-container">
+            <div class="slider" bind:this={slider}>
+                <div class="slider-margin"></div>
+            
+                <div class="card">
+                    <p class="number">01</p>
+                    <div class="card-details">
+                        <h3>Neque risus maecenas</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    
                 </div>
-                
-            </div>
 
-            <div class="card">
-                <p class="number">02</p>
-                <div class="card-details">
-                    <h3>Posuere leo eu nisl at tellus</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <div class="card">
+                    <p class="number">02</p>
+                    <div class="card-details">
+                        <h3>Posuere leo eu nisl at tellus</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    
                 </div>
-                
-            </div>
 
-            <div class="card">
-                <p class="number">03</p>
-                <div class="card-details">
-                    <h3>Nisl tempor eu tortor vel est dictum</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <div class="card">
+                    <p class="number">03</p>
+                    <div class="card-details">
+                        <h3>Nisl tempor eu tortor vel est dictum</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    
                 </div>
-                
-            </div>
 
-            <div class="card">
-                <p class="number">04</p>
-                <div class="card-details">
-                    <h3>Duis aute irure dolor in reprehenderit</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <div class="card last-card">
+                    <p class="number">04</p>
+                    <div class="card-details">
+                        <h3>Duis aute irure dolor in reprehenderit</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
+                    
                 </div>
-                
-            </div>
 
-            <div class="slider-margin"></div>
-        
+                <div class="slider-margin"></div>
+            
+            </div>
         </div>
     </div>
+    
     
 </div>
 
 <style>
 
 :root{
-    --slider-margin: 5vw;
+    --slider-margin: 10vw;
     --carousel-padding: 40px;
     --slider-blur: 10px;
+    --card-width: 80vw;
+    --card-height: 300px;
+    --slider-gap: 2vw;
+}
+
+@media (min-width: 600px) {
+  :root{
+    --card-width: 25vw;
+    --card-height: 250px;
+  }
+}
+
+@media (min-width: 1000px) {
+  :root{
+    --slider-gap: 1vw;
+    --card-width: 26vw;
+    --card-height: 250px;
+  }
 }
 .component{
     height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    z-index: 3;
+    position: relative;
 }
 
 
@@ -103,11 +136,15 @@
     background-color: var(--maincolor);
 }
 
+section{
+    text-align: center;
+}
 
 .carousel-container{
     overflow: hidden;
     width: 100vw;
-    height: 200px;
+    height: var(--card-height);
+    margin: var(--spacing5) 0px;
 }
 
 .carousel-container::before{
@@ -154,7 +191,6 @@
 
 .slider{
     display: flex;
-    gap: 1vw;
     position: absolute;
     height: inherit;
 }
@@ -167,18 +203,23 @@
 .card{
     background-color: white;
     padding: var(--spacing3);
+    margin-right: var(--slider-gap);
     border-radius: var(--spacing3);
     display: flex;
     flex-direction: column;
     gap: var(--spacing1);
     color: black;
     height: auto;
-    width: 29vw;
+    width: var(--card-width);
     justify-content: space-between;
 }
 
+.last-card{
+    margin-right: 0;
+}
+
 .slider-margin{
-    width: 5vw;
+    width: var(--slider-margin);
     height: inherit;
 }
 
@@ -188,6 +229,8 @@
     padding: var(--spacing2) var(--spacing3);
     border-radius: var(--spacing6);
     transition: all 0.5s ease;
+    width: fit-content;
+    margin: auto;
     
 }
 

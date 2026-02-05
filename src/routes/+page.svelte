@@ -4,7 +4,7 @@
 </script>
 
 <div class="placeholder">
-    <p>[Other Web Component]</p>
+    <p>[Other Web Component] <br> <br> | <br> | <br> V </p>
 </div>
 
 <Component/>
@@ -24,6 +24,7 @@
     .placeholder > p {
         color: gray;
         font-family: 'Courier New', Courier, monospace;
-        font-weight: 600;
+        font-weight: 500;
+        text-align: center;
     }
 </style>
